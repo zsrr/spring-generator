@@ -1,6 +1,6 @@
 package com.stephen.springgenerator.inflater;
 
-import com.stephen.springgenerator.base.ConfigurationManager;
+import com.stephen.springgenerator.base.Config;
 import com.stephen.springgenerator.base.DependenciesResolver;
 import com.stephen.springgenerator.util.FileUtils;
 
@@ -35,10 +35,10 @@ public class PomInflater {
     }
 
     private String inflateProjectInfo(String content) {
-        ConfigurationManager cm = ConfigurationManager.getInstance();
+        Config cm = Config.getInstance();
 
         return content.replace("${groupId}", cm.getGroupId()).
                 replace("${artifactId}", cm.getArtifactId()).
-                replace("${version}", cm.getVersion().toString());
+                replace("${version}", cm.getVersion());
     }
 }

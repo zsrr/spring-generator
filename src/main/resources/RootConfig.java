@@ -14,6 +14,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.util.Properties;
+import java.io.IOException;
 
 @Configuration
 @ComponentScan(basePackages =
@@ -34,28 +35,21 @@ public class RootConfig {
     }
 
     @Bean
-    public DataSource mysqlDataSource() {
+    public DataSource mysqlDataSource() throws NamingException {
         DataSource dataSource;
         JndiTemplate jndi = new JndiTemplate();
-        try {
-            dataSource = jndi.lookup("Type your jndi here", DataSource.class);
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
+        dataSource = jndi.lookup("${jndi}", DataSource.class);
         return dataSource;
     }
 
     @Bean
-    LocalSessionFactoryBean factoryBean(DataSource dataSource) {
+    LocalSessionFactoryBean factoryBean(DataSource dataSource) throws IOException {
         LocalSessionFactoryBean sfb = new LocalSessionFactoryBean();
         sfb.setDataSource(dataSource);
         sfb.setAnnotatedPackages("${basePackage}.domain");
         sfb.setPackagesToScan("${basePackage}.domain");
         Properties properties = new Properties();
-        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL57Dialect");
-        properties.put("hibernate.hbm2ddl.auto", "update");
-        properties.put("hibernate.show_sql", "true");
-        properties.put("hibernate.format_sql", "true");
+        properties.load(this.getClass().getClassLoader().getResourceAsStream("hibernate.properties"));
         sfb.setHibernateProperties(properties);
         return sfb;
     }

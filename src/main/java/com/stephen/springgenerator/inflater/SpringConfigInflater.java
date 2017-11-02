@@ -1,6 +1,6 @@
 package com.stephen.springgenerator.inflater;
 
-import com.stephen.springgenerator.base.ConfigurationManager;
+import com.stephen.springgenerator.base.Config;
 import com.stephen.springgenerator.util.FileUtils;
 
 import java.io.File;
@@ -14,14 +14,19 @@ public class SpringConfigInflater {
 
         File rootDes = new File(FileUtils.getDefaultPackageDir(), "RootConfig.java");
         File webDes = new File(FileUtils.getDefaultPackageDir(), "WebConfig.java");
+        File resDes = new File(FileUtils.getProjectBaseDir(), "src/main/resources/hibernate.properties");
 
         FileUtils.writeToFile(rootDes, inflateBasePackage(FileUtils.readFromIs(cl.getResourceAsStream("RootConfig.java"))));
         FileUtils.writeToFile(webDes, inflateBasePackage(FileUtils.readFromIs(cl.getResourceAsStream("WebConfig.java"))));
+        FileUtils.writeToFile(resDes, FileUtils.readFromIs(cl.getResourceAsStream("hibernate.properties")));
 
         System.out.println("Configuration was successfully generated");
     }
 
     private String inflateBasePackage(String source) {
-        return source.replace("${basePackage}", ConfigurationManager.getInstance().getDefaultPackage());
+        Config config = Config.getInstance();
+        String jndi = config.getJndi() == null ? "Type your jndi here" : config.getJndi();
+        return source.replace("${basePackage}", config.getDefaultPackage())
+                .replace("${jndi}", jndi);
     }
 }

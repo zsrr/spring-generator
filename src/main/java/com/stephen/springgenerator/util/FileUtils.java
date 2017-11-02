@@ -1,6 +1,6 @@
 package com.stephen.springgenerator.util;
 
-import com.stephen.springgenerator.base.ConfigurationManager;
+import com.stephen.springgenerator.base.Config;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -13,12 +13,27 @@ public class FileUtils {
     private static List<File> fileToBeCreated;
 
     public static File getProjectBaseDir() {
-        return new File(USER_DIR, ConfigurationManager.getInstance().getProjectName());
+        return new File(USER_DIR, Config.getInstance().getProjectName());
+    }
+
+    public static File getFileFromArtifact(String groupId, String artifactId) {
+        String mavenLocalRepoDir = Config.getInstance().getMavenLocalRepoDir();
+        if (mavenLocalRepoDir == null) {
+            return null;
+        }
+        String[] parts = groupId.split("\\.");
+        StringBuilder sb = new StringBuilder();
+        for (String part : parts) {
+            sb.append(part);
+            sb.append("/");
+        }
+        sb.append(artifactId);
+        return new File(mavenLocalRepoDir, sb.toString());
     }
 
     public static File getDefaultPackageDir() {
-        File sourceCodeDir = new File(USER_DIR, ConfigurationManager.getInstance().getProjectName() + "/src/main/java");
-        return new File(sourceCodeDir, ConfigurationManager.getInstance().getDefaultPackage().replace(".", "/"));
+        File sourceCodeDir = new File(USER_DIR, Config.getInstance().getProjectName() + "/src/main/java");
+        return new File(sourceCodeDir, Config.getInstance().getDefaultPackage().replace(".", "/"));
     }
 
     public static String readFromIs(InputStream is) {
@@ -61,6 +76,9 @@ public class FileUtils {
 
             return sb.toString();
         } catch (IOException e) {
+            if (e instanceof FileNotFoundException) {
+                return null;
+            }
             throw new IllegalStateException(e);
         } finally {
             CloseUtils.closeInputStream(is);
@@ -133,7 +151,7 @@ public class FileUtils {
     }
 
     private static void initJavaFolder(File javaFolder) {
-        String[] parts = ConfigurationManager.getInstance().getDefaultPackage().split("\\.");
+        String[] parts = Config.getInstance().getDefaultPackage().split("\\.");
         StringBuilder sb = new StringBuilder();
         for (String part : parts) {
             sb.append(part);
@@ -156,13 +174,19 @@ public class FileUtils {
     private static void initMain(File main) {
         File javaFolder = new File(main, "java");
         File webapp = new File(main, "webapp");
+        File resources = new File(main, "resources");
 
         fileToBeCreated.add(javaFolder);
         fileToBeCreated.add(webapp);
-        fileToBeCreated.add(new File(main, "resources"));
+        fileToBeCreated.add(resources);
 
         initJavaFolder(javaFolder);
+        initResources(resources);
         initWebApp(webapp);
+    }
+
+    private static void initResources(File resource) {
+        fileToBeCreated.add(new File(resource, "hibernate.properties"));
     }
 
     private static void initTest(File test) {
