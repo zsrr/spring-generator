@@ -5,6 +5,8 @@ import com.stephen.springgenerator.util.FileUtils;
 
 import java.io.File;
 
+import static java.io.File.separator;
+
 public class SpringConfigInflater {
 
     public void inflate() {
@@ -14,7 +16,8 @@ public class SpringConfigInflater {
 
         File rootDes = new File(FileUtils.getDefaultPackageDir(), "RootConfig.java");
         File webDes = new File(FileUtils.getDefaultPackageDir(), "WebConfig.java");
-        File resDes = new File(FileUtils.getProjectBaseDir(), "src/main/resources/hibernate.properties");
+        File resDes = new File(FileUtils.getProjectBaseDir(), "src" + separator + "main" +
+                separator + "resources" + separator + "hibernate.properties");
 
         FileUtils.writeToFile(rootDes, inflateBasePackage(FileUtils.readFromIs(cl.getResourceAsStream("RootConfig.java"))));
         FileUtils.writeToFile(webDes, inflateBasePackage(FileUtils.readFromIs(cl.getResourceAsStream("WebConfig.java"))));

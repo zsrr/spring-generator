@@ -6,6 +6,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.io.File.separator;
+
 public class FileUtils {
 
     public static final File USER_DIR = new File(System.getProperty("user.dir"));
@@ -25,15 +27,15 @@ public class FileUtils {
         StringBuilder sb = new StringBuilder();
         for (String part : parts) {
             sb.append(part);
-            sb.append("/");
+            sb.append(separator);
         }
         sb.append(artifactId);
         return new File(mavenLocalRepoDir, sb.toString());
     }
 
     public static File getDefaultPackageDir() {
-        File sourceCodeDir = new File(USER_DIR, Config.getInstance().getProjectName() + "/src/main/java");
-        return new File(sourceCodeDir, Config.getInstance().getDefaultPackage().replace(".", "/"));
+        File sourceCodeDir = new File(USER_DIR, Config.getInstance().getProjectName() + separator + "src" + separator + "main" + separator + "java");
+        return new File(sourceCodeDir, Config.getInstance().getDefaultPackage().replace(".", separator));
     }
 
     public static String readFromIs(InputStream is) {
@@ -156,7 +158,7 @@ public class FileUtils {
         for (String part : parts) {
             sb.append(part);
             fileToBeCreated.add(new File(javaFolder, sb.toString()));
-            sb.append("/");
+            sb.append(separator);
         }
 
         initSourceCodeStructure(getDefaultPackageDir());

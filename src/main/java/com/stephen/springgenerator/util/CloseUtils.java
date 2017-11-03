@@ -1,7 +1,5 @@
 package com.stephen.springgenerator.util;
 
-import org.apache.http.impl.client.CloseableHttpClient;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -33,16 +31,6 @@ public class CloseUtils {
         if (writer != null) {
             try {
                 writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void closeHttpClient(CloseableHttpClient client) {
-        if (client != null) {
-            try {
-                client.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

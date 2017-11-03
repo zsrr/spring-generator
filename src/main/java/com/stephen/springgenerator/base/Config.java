@@ -1,143 +1,97 @@
 package com.stephen.springgenerator.base;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stephen.springgenerator.util.FileUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Config {
 
-    @JsonProperty("project")
-    private String project;
-
-    @JsonProperty("local_repo")
-    private String mavenLocalRepoDir;
-
-    @JsonProperty("spring_version")
-    private String springVersion;
-
-    @JsonProperty("j2ee_version")
-    private String j2eeVersion;
-
-    @JsonProperty("servlet_version")
-    private String servletVersion;
-
-    @JsonProperty("jedis_version")
-    private String jedisVersion;
-
-    @JsonProperty("junit_version")
-    private String junitVersion;
-
-    @JsonProperty("jackson2_version")
-    private String jackson2Version;
-
-    @JsonProperty("hibernate_version")
-    private String hibernateVersion;
-
-    @JsonProperty(value = "group_id", required = true)
-    private String groupId;
-
-    @JsonProperty(value = "artifact_id", required = true)
-    private String artifactId;
-
-    @JsonProperty(required = true)
-    private String version;
-
-    private String jndi;
+    private Properties properties;
 
     private static Config sInstance;
 
     public String getProjectName() {
-        return project == null ? artifactId : project;
+        String project = properties.getProperty("project");
+        return project == null ? getArtifactId() : project;
     }
 
     public String getMavenLocalRepoDir() {
-        return mavenLocalRepoDir;
+        return properties.getProperty("localRepo");
     }
 
     public String getSpringVersion() {
-        return springVersion;
+        return properties.getProperty("springVersion");
     }
 
     public String getJ2eeVersion() {
-        return j2eeVersion;
+        return properties.getProperty("j2eeVersion");
     }
 
     public String getServletVersion() {
-        return servletVersion;
+        return properties.getProperty("servletVersion");
     }
 
     public String getJedisVersion() {
-        return jedisVersion;
+        return properties.getProperty("jedisVersion");
     }
 
     public String getJunitVersion() {
-        return junitVersion;
+        return properties.getProperty("junitVersion");
     }
 
     public String getJackson2Version() {
-        return jackson2Version;
+        return properties.getProperty("jackson2Version");
     }
 
     public String getHibernateVersion() {
-        return hibernateVersion;
+        return properties.getProperty("hibernateVersion");
     }
 
     public String getGroupId() {
-        return groupId;
+        return properties.getProperty("groupId");
     }
 
     public String getArtifactId() {
-        return artifactId;
+        return properties.getProperty("artifactId");
     }
 
     public String getVersion() {
-        return version;
+        return properties.getProperty("version", "0.0.1");
     }
 
     public String getJndi() {
-        return jndi;
+        return properties.getProperty("jndi");
     }
 
     public String getDefaultPackage() {
         return getGroupId() + "." + getArtifactId().replace("-", "");
     }
 
+    private Config(Properties properties) {
+        checkProperties(properties);
+        this.properties = properties;
+    }
+
+    private static void checkProperties(Properties properties) {
+        if (!properties.containsKey("groupId") ||
+                !properties.containsKey("artifactId")) {
+            throw new IllegalArgumentException("The properties file must contain 'groupId' and 'artifactId'");
+        }
+    }
+
     public static Config getInstance() {
         if (sInstance == null) {
-            String content = FileUtils.readFromFile(new File(FileUtils.USER_DIR, "settings.json"));
-            if (content != null) {
-                try {
-                    ObjectMapper om = new ObjectMapper();
-                    sInstance = om.readValue(content, Config.class);
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
+            try {
+                Properties properties = new Properties();
+                properties.load(new FileInputStream(new File(FileUtils.USER_DIR, "conf.properties")));
+                sInstance = new Config(properties);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
             }
         }
         return sInstance;
-    }
-
-    @Override
-    public String toString() {
-        return "Config{" +
-                "project='" + project + '\'' +
-                ", mavenLocalRepoDir='" + mavenLocalRepoDir + '\'' +
-                ", springVersion='" + springVersion + '\'' +
-                ", j2eeVersion='" + j2eeVersion + '\'' +
-                ", servletVersion='" + servletVersion + '\'' +
-                ", jedisVersion='" + jedisVersion + '\'' +
-                ", junitVersion='" + junitVersion + '\'' +
-                ", jackson2Version='" + jackson2Version + '\'' +
-                ", hibernateVersion='" + hibernateVersion + '\'' +
-                ", groupId='" + groupId + '\'' +
-                ", artifactId='" + artifactId + '\'' +
-                ", version='" + version + '\'' +
-                ", jndi='" + jndi + '\'' +
-                '}';
     }
 }

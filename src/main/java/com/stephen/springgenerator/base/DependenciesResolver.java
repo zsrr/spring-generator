@@ -23,7 +23,7 @@ public class DependenciesResolver {
     public VersionNumber getSpringVersion() {
         String vnFromConfig = Config.getInstance().getSpringVersion();
         if (vnFromConfig != null) {
-            System.out.println("Using spring version defined in settings.json: " + vnFromConfig);
+            System.out.println("Using spring version defined in conf.json: " + vnFromConfig);
             return VersionNumber.parse(vnFromConfig);
         }
         VersionNumber local = getVNFromLocalRepo("org.springframework", "spring-core");
@@ -40,7 +40,7 @@ public class DependenciesResolver {
     public VersionNumber getJ2EEVersion() {
         String vnFromConfig = Config.getInstance().getJ2eeVersion();
         if (vnFromConfig != null) {
-            System.out.println("Using java-ee version defined in settings.json: " + vnFromConfig);
+            System.out.println("Using java-ee version defined in conf.json: " + vnFromConfig);
             return VersionNumber.parse(vnFromConfig);
         }
         VersionNumber local = getVNFromLocalRepo("javax", "javaee-api");
@@ -57,7 +57,7 @@ public class DependenciesResolver {
     public VersionNumber getServletVersion() {
         String vnFromConfig = Config.getInstance().getServletVersion();
         if (vnFromConfig != null) {
-            System.out.println("Using servlet version defined in settings.json: " + vnFromConfig);
+            System.out.println("Using servlet version defined in conf.json: " + vnFromConfig);
             return VersionNumber.parse(vnFromConfig);
         }
         VersionNumber local = getVNFromLocalRepo("javax.servlet", "javax.servlet-api");
@@ -74,7 +74,7 @@ public class DependenciesResolver {
     public VersionNumber getJedisVersion() {
         String vnFromConfig = Config.getInstance().getJedisVersion();
         if (vnFromConfig != null) {
-            System.out.println("Using jedis version defined in settings.json: " + vnFromConfig);
+            System.out.println("Using jedis version defined in conf.json: " + vnFromConfig);
             return VersionNumber.parse(vnFromConfig);
         }
         VersionNumber local = getVNFromLocalRepo("redis.clients", "jedis");
@@ -91,7 +91,7 @@ public class DependenciesResolver {
     public VersionNumber getJunitVersion() {
         String vnFromConfig = Config.getInstance().getJunitVersion();
         if (vnFromConfig != null) {
-            System.out.println("Using junit version defined in settings.json: " + vnFromConfig);
+            System.out.println("Using junit version defined in conf.json: " + vnFromConfig);
             return VersionNumber.parse(vnFromConfig);
         }
         VersionNumber local = getVNFromLocalRepo("junit", "junit");
@@ -108,7 +108,7 @@ public class DependenciesResolver {
     public VersionNumber getJackson2Version() {
         String vnFromConfig = Config.getInstance().getJackson2Version();
         if (vnFromConfig != null) {
-            System.out.println("Using jackson version defined in settings.json: " + vnFromConfig);
+            System.out.println("Using jackson version defined in conf.json: " + vnFromConfig);
             return VersionNumber.parse(vnFromConfig);
         }
         VersionNumber local = getVNFromLocalRepo("com.fasterxml.jackson.core", "jackson-core");
@@ -125,7 +125,7 @@ public class DependenciesResolver {
     public VersionNumber getHibernateVersion() {
         String vnFromConfig = Config.getInstance().getHibernateVersion();
         if (vnFromConfig != null) {
-            System.out.println("Using hibernate version defined in settings.json: " + vnFromConfig);
+            System.out.println("Using hibernate version defined in conf.json: " + vnFromConfig);
             return VersionNumber.parse(vnFromConfig);
         }
         VersionNumber local = getVNFromLocalRepo("org.hibernate", "hibernate-core");
@@ -160,30 +160,4 @@ public class DependenciesResolver {
         Collections.sort(vns);
         return vns.get(vns.size() - 1);
     }
-
-    /*private VersionNumber getVNFromRemoteRepo(String groupId, String artifactId) {
-        System.out.println("Trying get dependency from https://mvnrepository.com" );
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setRedirectStrategy(new LaxRedirectStrategy())
-                .build();
-
-        try {
-            HttpClientContext context = HttpClientContext.create();
-            HttpGet httpGet = new HttpGet(ArtifactUtils.getRemoteUrl(groupId, artifactId) + "/latest");
-            httpclient.execute(httpGet, context);
-            HttpHost target = context.getTargetHost();
-            List<URI> redirectLocations = context.getRedirectLocations();
-
-            URI location = URIUtils.resolve(httpGet.getURI(), target, redirectLocations);
-            String redirectUri = location.toASCIIString();
-            Matcher matcher = RegexUtils.getArtifactMatcher(redirectUri);
-            // 此处还需要改进一下，如何得到最新的RELEASE稳定版本呢
-            matcher.find();
-            return VersionNumber.parse(matcher.group());
-        } catch (IOException | URISyntaxException e) {
-            throw new IllegalStateException(e);
-        } finally {
-            CloseUtils.closeHttpClient(httpclient);
-        }
-    }*/
 }
