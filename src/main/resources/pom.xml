@@ -16,6 +16,20 @@
     <build>
         <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
         <testOutputDirectory>src/main/webapp/WEB-INF/classes</testOutputDirectory>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <server>tomcat7</server>
+                    <path>/${deployPath}</path>
+                    <url>http://localhost:8080/manager/text</url>
+                    <contextReloadable>true</contextReloadable>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>

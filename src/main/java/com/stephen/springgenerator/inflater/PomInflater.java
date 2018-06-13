@@ -39,6 +39,7 @@ public class PomInflater {
 
         return content.replace("${groupId}", cm.getGroupId()).
                 replace("${artifactId}", cm.getArtifactId()).
-                replace("${version}", cm.getVersion());
+                replace("${version}", cm.getVersion())
+                .replace("${deployPath}", cm.getProjectName());
     }
 }
