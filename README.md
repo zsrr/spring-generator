@@ -2,9 +2,9 @@
 一个用于生成Spring项目的东西，包含web.xml，根上下文和web上下文，以及Hibernate的基本配置。
 
 ## 基本使用
-在[此网址](http://ok34fi9ya.bkt.clouddn.com/spring-generator-0.0.3.zip)下载压缩包，解压。
+在[此网址](http://ok34fi9ya.bkt.clouddn.com/spring-generator-0.0.4.zip)下载压缩包，解压。
 
-编辑conf.properties文件，其中``group_id, artifact_id``字段为必填，其余之后会有详细的配置。
+编辑conf.properties文件，其中``groupId, artifactId``字段为必填，其余之后会有详细的配置。
 
 终端切换到文件夹，执行以下两句(Windows暂不支持抱歉):
 

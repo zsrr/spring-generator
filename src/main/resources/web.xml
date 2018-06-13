@@ -11,7 +11,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>RootConfig</param-value>
+        <param-value>{groupId}.{artifactId}.RootConfig</param-value>
     </context-param>
 
     <listener>
@@ -27,7 +27,7 @@
         </init-param>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>WebConfig</param-value>
+            <param-value>{groupId}.{artifactId}.WebConfig</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
